@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-cream: #F8F9FB;
+  --bg-sand: #EEF1F6;
+  --bg-white: #FFFFFF;
+  --clay: #1C3557;
+  --clay-dark: #142741;
+  --clay-light: #2A4D7E;
+  --gold: #E8A020;
+  --gold-dark: #C88010;
+  --gold-light: #F5B840;
+  --espresso: #0A1929;
+  --cocoa: #1A2E47;
+  --mocha: #4A6080;
+  --adobe: #D0D8E8;
+  --cream: #F8F9FB;
+  --sand: #EEF1F6;
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--espresso);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), Georgia, serif;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-clay px-7 py-3.5 font-heading font-bold text-white shadow-warm transition-all duration-200 hover:bg-clay-dark hover:shadow-warm-lg active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-clay/20 bg-white px-7 py-3.5 font-heading font-bold text-clay transition-all duration-200 hover:border-clay hover:bg-clay/5 active:scale-[0.98];
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 font-heading font-bold text-espresso shadow-warm transition-all duration-200 hover:bg-gold-dark hover:shadow-warm-lg active:scale-[0.98];
+  }
+
+  .pill-clay {
+    @apply inline-flex items-center gap-2 rounded-full bg-clay/10 px-4 py-1.5 text-sm font-heading font-semibold text-clay;
+  }
+
+  .pill-gold {
+    @apply inline-flex items-center gap-2 rounded-full bg-gold/15 px-4 py-1.5 text-sm font-heading font-semibold text-gold-dark;
+  }
+
+  .lead {
+    @apply text-lg text-mocha leading-relaxed;
+  }
+
+  .card-base {
+    @apply rounded-3xl bg-white border border-adobe shadow-card transition-all duration-300 hover:shadow-card-hover;
+  }
+
+  .section-eyebrow {
+    @apply text-sm font-heading font-bold uppercase tracking-[0.18em] text-clay;
+  }
+
+  .horizon-band {
+    @apply bg-gradient-to-r from-transparent via-gold to-transparent;
+  }
+}
+
+.bg-warm-radial {
+  background: radial-gradient(circle at 30% 20%, rgba(28,53,87,0.10) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(232,160,32,0.06) 0%, transparent 55%),
+              var(--bg-cream);
+}
+
+.bg-navy-radial {
+  background: radial-gradient(circle at 70% 30%, rgba(42,77,126,0.15) 0%, transparent 50%),
+              var(--espresso);
+}
+
+.bg-gold-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(232,160,32,0.04) 10px,
+    rgba(232,160,32,0.04) 20px
+  );
+}
