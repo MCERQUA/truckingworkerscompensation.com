@@ -77,7 +77,7 @@ export default function QuotePage() {
                     </div>
                     <div>
                       <label className="block text-sm font-heading font-bold text-espresso mb-1.5">Phone *</label>
-                      <input name="phone" type="tel" required placeholder="(555) 000-0000" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" />
+                      <input name="phone" type="tel" required placeholder="844-967-5247" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" />
                     </div>
                   </div>
 

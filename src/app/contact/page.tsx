@@ -82,7 +82,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-heading font-bold text-espresso mb-1.5">Phone</label>
-                      <input name="phone" type="tel" placeholder="(555) 000-0000" className="w-full rounded-xl border border-adobe px-4 py-3 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" />
+                      <input name="phone" type="tel" placeholder="844-967-5247" className="w-full rounded-xl border border-adobe px-4 py-3 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" />
                     </div>
                     <div>
                       <label className="block text-sm font-heading font-bold text-espresso mb-1.5">Message *</label>
