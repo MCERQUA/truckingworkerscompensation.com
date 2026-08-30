@@ -4,7 +4,7 @@ export const COPY = {
     h1Highlight: "Trucking Companies",
     subcopy:
       "From single-truck owner-operators to 500-driver fleets — same-day certificates, DOT compliance support, and competitive rates from A-rated carriers. Keep your trucks rolling and your drivers protected.",
-    imageAlt: "Semi-truck on American highway at sunrise",
+    imageAlt: "Truck driver standing beside his red semi truck in a fleet yard at sunset",
     statValue: "5,000+",
     statLabel: "Trucking companies covered nationwide",
     badge: "DOT Compliant · Same-Day Certs",
