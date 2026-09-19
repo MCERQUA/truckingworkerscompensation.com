@@ -75,7 +75,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-          <p className="text-xs text-center opacity-70 px-4 pb-6">Contractors Choice Agency &middot; 12220 E Riggs Road, Suite #105, Chandler, AZ 85249 &middot; AZ License #3001409680 &middot; NPN #8608479</p>
+          <p className="text-xs text-center opacity-70 px-4 pb-6">Contractors Choice Agency &middot; 12220 E Riggs Road, Suite #105, Chandler, AZ 85249 &middot; NPN #8608479</p>
     </footer>
   );
 }
