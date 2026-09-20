@@ -24,7 +24,6 @@ export const metadata: Metadata = {
     images: ["/images/og-image.jpg"],
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: SITE.url },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
