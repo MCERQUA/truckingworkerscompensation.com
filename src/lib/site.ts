@@ -7,9 +7,9 @@ export const SITE = {
   phone: "844-967-5247",
   phoneHref: "tel:+18449675247",
   email: "josh@contractorschoiceagency.com",
-  address: "3901 N. Federal Highway, Suite 200, Fort Lauderdale, FL 33308",
+  address: "12220 E Riggs Rd, Chandler, AZ 85249",
   founded: "2003",
-  npn: "8880624",
+  npn: "8608479",
 };
 
 export const NAV_LINKS = [
@@ -125,5 +125,5 @@ export const CREDENTIALS = [
   { label: "FMCSA Registered", icon: "Award" },
   { label: "Licensed All 50 States", icon: "Globe" },
   { label: "A-Rated Carriers", icon: "Shield" },
-  { label: "NPN #8880624", icon: "BadgeCheck" },
+  { label: "NPN #8608479", icon: "BadgeCheck" },
 ];
