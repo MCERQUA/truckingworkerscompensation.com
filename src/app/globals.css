@@ -6,9 +6,9 @@
   --bg-cream: #F8F9FB;
   --bg-sand: #EEF1F6;
   --bg-white: #FFFFFF;
-  --clay: #1C3557;
-  --clay-dark: #142741;
-  --clay-light: #2A4D7E;
+  --clay: #9A3F18;
+  --clay-dark: #6B2F14;
+  --clay-light: #B4460F;
   --gold: #E8A020;
   --gold-dark: #C88010;
   --gold-light: #F5B840;
@@ -78,13 +78,13 @@ body {
 }
 
 .bg-warm-radial {
-  background: radial-gradient(circle at 30% 20%, rgba(28,53,87,0.10) 0%, transparent 50%),
+  background: radial-gradient(circle at 30% 20%, rgba(154,63,24,0.10) 0%, transparent 50%),
               radial-gradient(circle at 80% 70%, rgba(232,160,32,0.06) 0%, transparent 55%),
               var(--bg-cream);
 }
 
 .bg-navy-radial {
-  background: radial-gradient(circle at 70% 30%, rgba(42,77,126,0.15) 0%, transparent 50%),
+  background: radial-gradient(circle at 70% 30%, rgba(180,70,15,0.15) 0%, transparent 50%),
               var(--espresso);
 }
 

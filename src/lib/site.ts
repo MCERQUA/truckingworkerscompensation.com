@@ -121,37 +121,6 @@ export const LOCATIONS = [
   { name: "Tennessee", slug: "tennessee", abbr: "TN" },
 ];
 
-export const TESTIMONIALS = [
-  {
-    name: "Mike Carlson",
-    company: "Carlson Freight LLC",
-    state: "Texas",
-    text: "Switched 12 trucks over to Trucking Workers Comp last year. Saved $18,000 on our annual premium and had certs in hand the same afternoon we called. The fleet portal alone is worth the switch.",
-    rating: 5,
-  },
-  {
-    name: "Sandra Reyes",
-    company: "SR Owner-Operator",
-    state: "California",
-    text: "As a solo owner-operator I had no idea how to get WC coverage that brokers would accept. They set me up with a ghost policy in one phone call, explained exactly what it covered, and my broker approved it same day.",
-    rating: 5,
-  },
-  {
-    name: "Dave Hutchins",
-    company: "Midwest Express Transport",
-    state: "Illinois",
-    text: "DOT audit came with 48-hour notice and we needed updated certificates for 35 drivers. These guys had everything issued before the auditor arrived. Couldn't have survived that audit without them.",
-    rating: 5,
-  },
-  {
-    name: "Loretta James",
-    company: "JL Trucking",
-    state: "Georgia",
-    text: "The pay-as-you-go program changed our cash flow completely. We used to dread audit season — now there are no surprises because premiums track our actual loads in real time.",
-    rating: 5,
-  },
-];
-
 export const CREDENTIALS = [
   { label: "FMCSA Registered", icon: "Award" },
   { label: "Licensed All 50 States", icon: "Globe" },

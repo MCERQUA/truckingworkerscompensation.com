@@ -38,11 +38,6 @@ export const COPY = {
     heading: "Quotes in 15 Minutes, Certs in Hours",
     sub: "We've streamlined the WC application process for trucking — less paperwork, faster approvals, and certificates issued the same day.",
   },
-  testimonials: {
-    eyebrow: "Client Stories",
-    heading: "Trusted by Trucking Operations Nationwide",
-    sub: "From owner-operators to large fleets, our clients trust us to protect their drivers and keep their trucks legally compliant.",
-  },
   finalCta: {
     heading: "Get Your Trucking WC Quote Today",
     sub: "Fill out our 2-minute form and receive a competitive quote from A-rated carriers. Same-day certificates available.",
