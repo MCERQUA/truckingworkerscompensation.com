@@ -11,7 +11,7 @@ export function JsonLd() {
     email: SITE.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "12220 E Riggs Rd",
+      streetAddress: "12220 E Riggs Rd, Suite #104",
       addressLocality: "Chandler",
       addressRegion: "AZ",
       postalCode: "85249",

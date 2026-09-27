@@ -7,7 +7,7 @@ export const SITE = {
   phone: "844-967-5247",
   phoneHref: "tel:+18449675247",
   email: "josh@contractorschoiceagency.com",
-  address: "12220 E Riggs Rd, Chandler, AZ 85249",
+  address: "12220 E Riggs Rd, Suite #104, Chandler, AZ 85249",
   founded: "2003",
   npn: "8608479",
 };
