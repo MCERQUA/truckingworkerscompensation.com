@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/animations/FadeIn";
 import { COPY, US_STATES, QUOTE_SERVICE_TYPES, COMPANY_TYPES, YEARS_OPTIONS } from "@/lib/content";
 import { SITE } from "@/lib/site";
 import { CheckCircle2, Send } from "lucide-react";
+import { OwnersFieldset } from "@/components/forms/OwnersFieldset";
 
 const WEBHOOK_URL = "https://josh.jam-bot.com/social-api/api/leads/webhook/netlify?tenant=josh&site=truckingworkerscompensation.com";
 
@@ -249,11 +250,14 @@ export default function QuotePage() {
                       <h3 className="font-heading font-bold text-sm uppercase tracking-wider">Owners and officers</h3>
                       <p className="text-xs opacity-70 mt-0.5">Each owner or officer to be included or excluded.</p>
                     </div>
-                    <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Owners and officers</label><textarea name="ownerNames" rows={3} placeholder="One owner or officer per line, with role" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Owner date of birth</label><input type="date" name="ownerDateOfBirth" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
-                      <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Ownership percentage</label><input type="text" name="ownerOwnershipPct" placeholder="100" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
-                    </div>
+                    <OwnersFieldset
+                      inputClass="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition"
+                      labelClass="block text-sm font-heading font-bold text-espresso mb-1.5"
+                      buttonClass="btn-secondary min-h-[44px]"
+                      accentTextClass="text-clay"
+                      mutedTextClass="text-mocha"
+                      borderClass="border-adobe"
+                    />
                   </div>
 
                   <button type="submit" disabled={loading} className="btn-primary w-full text-base">
