@@ -19,12 +19,13 @@ interface OwnerRow {
   pct: string;
   // ACORD 130 additions (all optional; no SSN / DOB / licence data is collected here).
   duties: string;
+  titleRel: string;
   election: string;
   classCode: string;
   payroll: string;
 }
 
-const blankRow = (pct = ""): OwnerRow => ({ name: "", dob: "", pct, duties: "", election: "", classCode: "", payroll: "" });
+const blankRow = (pct = ""): OwnerRow => ({ name: "", dob: "", pct, duties: "", titleRel: "", election: "", classCode: "", payroll: "" });
 
 interface OwnersFieldsetProps {
   inputClass: string;
@@ -77,9 +78,11 @@ export function OwnersFieldset({
     owners.forEach((o, i) => {
       const n = fieldNames(i);
       fields[n.name] = o.name;
+      if (i === 0) fields.ownerName1 = o.name; // mirror of row 1's ownerNames
       fields[n.dob] = o.dob;
       fields[n.pct] = o.pct;
       const x = ownerExtraNames(i);
+      fields[x.titleRel] = o.titleRel;
       fields[x.duties] = o.duties;
       fields[x.election] = o.election;
       fields[x.classCode] = o.classCode;
@@ -188,6 +191,11 @@ export function OwnersFieldset({
                 placeholder="Full name and role"
                 className={inputClass}
               />
+              {i === 0 && <input type="hidden" name="ownerName1" value={o.name} />}
+            </div>
+            <div>
+              <label htmlFor={id("titleRel")} className={labelClass}>Title or relationship to the business (optional)</label>
+              <input id={id("titleRel")} name={x.titleRel} type="text" autoComplete="off" maxLength={80} value={o.titleRel} onChange={(e) => update(i, "titleRel", e.target.value)} placeholder="Owner, President, Spouse" className={inputClass} />
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>

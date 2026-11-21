@@ -144,6 +144,8 @@ export const ownerExtraNames = (i: number) => {
     election: `ownerIncludedExcluded${s}`,
     classCode: `ownerClassCode${s}`,
     payroll: `ownerPayroll${s}`,
+    // Title / relationship is always numbered (row 1 = ownerTitleRelationship1), unlike the unnumbered row-1 fields above.
+    titleRel: `ownerTitleRelationship${i + 1}`,
   };
 };
 
@@ -203,8 +205,9 @@ export function allNewFieldNames(): string[] {
   for (let n = 1; n <= PRIOR_ROWS; n++) add(priorFields(n));
   for (let i = 0; i < OWNER_ROWS; i++) {
     const o = ownerExtraNames(i);
-    names.push(o.duties, o.election, o.classCode, o.payroll);
+    names.push(o.duties, o.election, o.classCode, o.payroll, o.titleRel);
   }
+  names.push("ownerName1"); // hidden mirror of row 1's ownerNames (OwnersFieldset)
   UW_QUESTIONS.forEach((q) => names.push(q.name, explanationName(q.name)));
   names.push(WORK_FROM_HOME_COUNT.name);
   return names;
