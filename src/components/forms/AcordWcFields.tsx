@@ -16,9 +16,6 @@ import {
   MAILING,
   POLICY_DATES,
   PRIOR_ROWS,
-  INITIALS_NAME,
-  SIGNATURE_DATE,
-  SIGNATURE_NAME,
   UW_QUESTIONS,
   WORK_FROM_HOME_COUNT,
   WORK_STATES,
@@ -30,8 +27,8 @@ import {
 
 // ACORD 130 intake additions for /quote. Every control is a real named, UNCONTROLLED input (or a
 // controlled radio) so the page's FormData(form) picks it up; collapsed <details> keep their inputs
-// in the DOM, so nothing is lost when a section is closed. All fields here are OPTIONAL except the
-// signature pair, which lives in <SignatureFields /> below. See acord-wc-spec.ts for the rules.
+// in the DOM, so nothing is lost when a section is closed. All fields here are OPTIONAL.
+// See acord-wc-spec.ts for the rules.
 
 interface Classes {
   inputClass: string;
@@ -206,31 +203,6 @@ export function AcordWcFields({ inputClass, labelClass, mutedTextClass = "text-m
           </div>
         ))}
       </Group>
-    </div>
-  );
-}
-
-export function SignatureFields({ inputClass, labelClass, mutedTextClass = "text-mocha" }: Classes) {
-  return (
-    <div className="space-y-4 pt-5 border-t border-adobe">
-      <div>
-        <h3 className="font-heading font-bold text-sm uppercase tracking-wider">Signature</h3>
-        <p className={`text-xs mt-0.5 ${mutedTextClass}`}>Type your full legal name as your electronic signature and enter today&apos;s date.</p>
-      </div>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="acord-signature" className={labelClass}>Applicant signature (type your full legal name) *</label>
-          <input id="acord-signature" name={SIGNATURE_NAME} type="text" required autoComplete="off" maxLength={62} placeholder="First Last" className={inputClass} />
-        </div>
-        <div>
-          <label htmlFor="acord-signature-date" className={labelClass}>Signature date (today) *</label>
-          <input id="acord-signature-date" name={SIGNATURE_DATE} type="date" required autoComplete="off" className={inputClass} />
-        </div>
-      </div>
-      <div className="max-w-[12rem]">
-        <label htmlFor="acord-initials" className={labelClass}>Initials (optional)</label>
-        <input id="acord-initials" name={INITIALS_NAME} type="text" autoComplete="off" maxLength={6} placeholder="AB" className={inputClass} />
-      </div>
     </div>
   );
 }

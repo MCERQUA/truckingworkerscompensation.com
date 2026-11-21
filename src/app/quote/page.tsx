@@ -9,8 +9,8 @@ import { COPY, US_STATES, QUOTE_SERVICE_TYPES, COMPANY_TYPES, YEARS_OPTIONS } fr
 import { SITE } from "@/lib/site";
 import { CheckCircle2, Send } from "lucide-react";
 import { OwnersFieldset } from "@/components/forms/OwnersFieldset";
-import { AcordWcFields, SignatureFields } from "@/components/forms/AcordWcFields";
-import { localToday, validateAcordExtras, type Problem } from "@/components/forms/acord-wc-spec";
+import { AcordWcFields } from "@/components/forms/AcordWcFields";
+import { validateAcordExtras, type Problem } from "@/components/forms/acord-wc-spec";
 
 const INPUT_CLASS = "w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition";
 const LABEL_CLASS = "block text-sm font-heading font-bold text-espresso mb-1.5";
@@ -68,7 +68,7 @@ export default function QuotePage() {
     data.forEach((v, k) => {
       if (typeof v === "string") values[k] = v;
     });
-    const found = validateAcordExtras(values, localToday());
+    const found = validateAcordExtras(values);
     setProblems(found);
     setSendFailed(false);
     if (found.length > 0) {
@@ -316,8 +316,6 @@ export default function QuotePage() {
                     mutedTextClass="text-mocha"
                     borderClass="border-adobe"
                   />
-
-                  <SignatureFields inputClass={INPUT_CLASS} labelClass={LABEL_CLASS} mutedTextClass="text-mocha" />
 
                   {problems.length > 0 && (
                     <div role="alert" className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">

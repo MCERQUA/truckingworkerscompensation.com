@@ -2,8 +2,7 @@
 // Source spec: skills/acord-forms/forms/acord-130/FIELDS.md.
 //
 // Rules this file encodes (every one is also checked by validateAcordExtras / the registration check):
-//  - ADD-ONLY: no existing field name is renamed. Every name below is new and OPTIONAL, except the
-//    signature pair (applicantSignature + signatureDate), which is the only new required input.
+//  - ADD-ONLY: no existing field name is renamed. Every name below is new and OPTIONAL.
 //  - No policy-number field of any kind (current / prior / other carrier). Carrier NAME, dates,
 //    years, premium and claim figures are fine.
 //  - FEIN only; a Social Security Number is never accepted there.
@@ -184,11 +183,6 @@ export const WORK_FROM_HOME_COUNT: TextDef = {
   max: 6,
 };
 
-// ---- Signature --------------------------------------------------------------------------------
-export const SIGNATURE_NAME = "applicantSignature";
-export const SIGNATURE_DATE = "signatureDate";
-export const INITIALS_NAME = "applicantInitials";
-
 // ---- Every NEW field name (for __forms.html) --------------------------------------------------
 export function allNewFieldNames(): string[] {
   const names: string[] = [];
@@ -213,7 +207,6 @@ export function allNewFieldNames(): string[] {
   }
   UW_QUESTIONS.forEach((q) => names.push(q.name, explanationName(q.name)));
   names.push(WORK_FROM_HOME_COUNT.name);
-  names.push(SIGNATURE_NAME, SIGNATURE_DATE, INITIALS_NAME);
   return names;
 }
 
@@ -225,8 +218,7 @@ export interface Problem {
   message: string;
 }
 
-/** `today` is the visitor's browser-local date as YYYY-MM-DD. */
-export function validateAcordExtras(values: Record<string, string>, today: string): Problem[] {
+export function validateAcordExtras(values: Record<string, string>): Problem[] {
   const out: Problem[] = [];
   const v = (k: string) => (values[k] ?? "").trim();
 
@@ -238,21 +230,5 @@ export function validateAcordExtras(values: Record<string, string>, today: strin
     });
   }
 
-  const sig = v(SIGNATURE_NAME);
-  if (!sig) out.push({ name: SIGNATURE_NAME, message: "Type your full legal name as your signature." });
-  else if (sig.split(/\s+/).length < 2) {
-    out.push({ name: SIGNATURE_NAME, message: "Type your full legal name (first and last) as your signature." });
-  }
-
-  const sd = v(SIGNATURE_DATE);
-  if (!sd) out.push({ name: SIGNATURE_DATE, message: "Enter today's date as the signature date." });
-  else if (sd !== today) out.push({ name: SIGNATURE_DATE, message: "The signature date must be today's date." });
-
   return out;
-}
-
-/** Browser-local today, YYYY-MM-DD. */
-export function localToday(now: Date = new Date()): string {
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}`;
 }
