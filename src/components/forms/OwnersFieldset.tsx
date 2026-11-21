@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ELECTION_EXCLUDE, ELECTION_INCLUDE, ownerExtraNames } from "./acord-wc-spec";
 
 // APP-004b (Josh, Insurance App Adjustments): solo vs multiple owners/officers.
 // Row 1 keeps the original field names (ownerNames / ownerDateOfBirth / ownerOwnershipPct) so the
@@ -16,7 +17,14 @@ interface OwnerRow {
   name: string;
   dob: string;
   pct: string;
+  // ACORD 130 additions (all optional; no SSN / DOB / licence data is collected here).
+  duties: string;
+  election: string;
+  classCode: string;
+  payroll: string;
 }
+
+const blankRow = (pct = ""): OwnerRow => ({ name: "", dob: "", pct, duties: "", election: "", classCode: "", payroll: "" });
 
 interface OwnersFieldsetProps {
   inputClass: string;
@@ -49,7 +57,7 @@ export function OwnersFieldset({
   onFieldsChange,
 }: OwnersFieldsetProps) {
   const [count, setCount] = useState<"1" | "2+">("1");
-  const [owners, setOwners] = useState<OwnerRow[]>([{ name: "", dob: "", pct: "100" }]);
+  const [owners, setOwners] = useState<OwnerRow[]>([blankRow("100")]);
   const focusRow = useRef<number | null>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const rowRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -60,7 +68,7 @@ export function OwnersFieldset({
 
   const summary = owners
     .filter((o) => o.name || o.dob || o.pct)
-    .map((o, i) => `Owner ${i + 1}: ${o.name || "(no name)"} | DOB ${o.dob || "(not given)"} | ${o.pct || "0"}% ownership`)
+    .map((o, i) => `Owner ${i + 1}: ${o.name || "(no name)"} | DOB ${o.dob || "(not given)"} | ${o.pct || "0"}% ownership${o.election ? ` | ${o.election}` : ""}`)
     .join("\n");
 
   useEffect(() => {
@@ -71,6 +79,11 @@ export function OwnersFieldset({
       fields[n.name] = o.name;
       fields[n.dob] = o.dob;
       fields[n.pct] = o.pct;
+      const x = ownerExtraNames(i);
+      fields[x.duties] = o.duties;
+      fields[x.election] = o.election;
+      fields[x.classCode] = o.classCode;
+      fields[x.payroll] = o.payroll;
     });
     onFieldsChange(fields);
   }, [owners, count, summary, onFieldsChange]);
@@ -91,7 +104,7 @@ export function OwnersFieldset({
       // Multiple: at least two rows; the solo 100% default no longer makes sense.
       setOwners((prev) => {
         const first = { ...prev[0], pct: prev[0].pct === "100" ? "" : prev[0].pct };
-        return prev.length >= 2 ? [first, ...prev.slice(1)] : [first, { name: "", dob: "", pct: "" }];
+        return prev.length >= 2 ? [first, ...prev.slice(1)] : [first, blankRow()];
       });
     }
   };
@@ -102,7 +115,7 @@ export function OwnersFieldset({
   const add = () => {
     if (owners.length >= MAX_OWNERS) return;
     focusRow.current = owners.length;
-    setOwners((prev) => [...prev, { name: "", dob: "", pct: "" }]);
+    setOwners((prev) => [...prev, blankRow()]);
   };
 
   const remove = (i: number) => {
@@ -143,6 +156,7 @@ export function OwnersFieldset({
 
       {owners.map((o, i) => {
         const n = fieldNames(i);
+        const x = ownerExtraNames(i);
         const id = (k: string) => `${idPrefix}-${k}-${i + 1}`;
         return (
           <div key={i} className={`space-y-3 rounded-xl border ${borderClass} p-4`} role="group" aria-labelledby={id("heading")}>
@@ -201,6 +215,30 @@ export function OwnersFieldset({
                 />
               </div>
             </div>
+            <div>
+              <label htmlFor={id("duties")} className={labelClass}>Duties</label>
+              <input id={id("duties")} name={x.duties} type="text" autoComplete="off" maxLength={136} value={o.duties} onChange={(e) => update(i, "duties", e.target.value)} placeholder="Dispatch, driving, office" className={inputClass} />
+            </div>
+            <div>
+              <label htmlFor={id("election")} className={labelClass}>Include or exclude this person from workers comp coverage?</label>
+              <select id={id("election")} name={x.election} value={o.election} onChange={(e) => update(i, "election", e.target.value)} className={`${inputClass} bg-white`}>
+                <option value="">Select...</option>
+                <option value={ELECTION_INCLUDE}>{ELECTION_INCLUDE}</option>
+                <option value={ELECTION_EXCLUDE}>{ELECTION_EXCLUDE}</option>
+              </select>
+            </div>
+            {o.election === ELECTION_INCLUDE && (
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor={id("classCode")} className={labelClass}>Class code if included</label>
+                  <input id={id("classCode")} name={x.classCode} type="text" autoComplete="off" maxLength={8} value={o.classCode} onChange={(e) => update(i, "classCode", e.target.value)} placeholder="7219" className={inputClass} />
+                </div>
+                <div>
+                  <label htmlFor={id("payroll")} className={labelClass}>Annual payroll if included</label>
+                  <input id={id("payroll")} name={x.payroll} type="text" inputMode="numeric" autoComplete="off" maxLength={16} value={o.payroll} onChange={(e) => update(i, "payroll", e.target.value)} placeholder="$" className={inputClass} />
+                </div>
+              </div>
+            )}
           </div>
         );
       })}

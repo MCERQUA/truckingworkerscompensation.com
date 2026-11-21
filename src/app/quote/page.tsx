@@ -9,26 +9,71 @@ import { COPY, US_STATES, QUOTE_SERVICE_TYPES, COMPANY_TYPES, YEARS_OPTIONS } fr
 import { SITE } from "@/lib/site";
 import { CheckCircle2, Send } from "lucide-react";
 import { OwnersFieldset } from "@/components/forms/OwnersFieldset";
+import { AcordWcFields, SignatureFields } from "@/components/forms/AcordWcFields";
+import { localToday, validateAcordExtras, type Problem } from "@/components/forms/acord-wc-spec";
 
+const INPUT_CLASS = "w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition";
+const LABEL_CLASS = "block text-sm font-heading font-bold text-espresso mb-1.5";
 const WEBHOOK_URL = "https://josh.jam-bot.com/social-api/api/leads/webhook/netlify?tenant=josh&site=truckingworkerscompensation.com";
 
 export default function QuotePage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [sendFailed, setSendFailed] = useState(false);
+
+  // Primary path: the leads webhook. Fallback: Netlify Forms (/__forms.html registration).
+  // Success is reported only if at least one of the two actually accepted the submission.
+  async function postWebhook(data: FormData): Promise<boolean> {
+    try {
+      const res = await fetch(WEBHOOK_URL, { method: "POST", body: data });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  async function postNetlifyForms(data: FormData): Promise<boolean> {
+    try {
+      const body = new URLSearchParams();
+      data.forEach((value, key) => {
+        if (typeof value === "string") body.append(key, value);
+      });
+      if (!body.has("form-name")) body.set("form-name", "quote");
+      const res = await fetch("/__forms.html", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
     const form = e.currentTarget;
     const data = new FormData(form);
-    try {
-      await fetch(WEBHOOK_URL, {
-        method: "POST",
-        body: data,
-      });
-    } catch {}
-    setSubmitted(true);
+
+    const values: Record<string, string> = {};
+    data.forEach((v, k) => {
+      if (typeof v === "string") values[k] = v;
+    });
+    const found = validateAcordExtras(values, localToday());
+    setProblems(found);
+    setSendFailed(false);
+    if (found.length > 0) {
+      const el = form.querySelector<HTMLElement>(`[name="${found[0].name}"]`);
+      el?.focus();
+      return;
+    }
+
+    setLoading(true);
+    const ok = (await postWebhook(data)) || (await postNetlifyForms(data));
     setLoading(false);
+    if (ok) setSubmitted(true);
+    else setSendFailed(true);
   }
 
   return (
@@ -238,10 +283,7 @@ export default function QuotePage() {
                       <h3 className="font-heading font-bold text-sm uppercase tracking-wider">Current or prior coverage</h3>
                       <p className="text-xs opacity-70 mt-0.5">Who covers you today, if anyone.</p>
                     </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Current or prior carrier</label><input type="text" name="priorCarrierName" placeholder="Carrier name" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
-                      <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Policy number</label><input type="text" name="priorPolicyNumber" placeholder="Policy number" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
-                    </div>
+                    <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Current or prior carrier</label><input type="text" name="priorCarrierName" placeholder="Carrier name" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
                     <div><label className="block text-sm font-heading font-bold text-espresso mb-1.5">Policy expiration date</label><input type="date" name="priorPolicyExpiration" className="w-full rounded-xl border border-adobe px-4 py-3 text-espresso placeholder:text-mocha/50 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition" /></div>
                   </div>
 
@@ -259,6 +301,30 @@ export default function QuotePage() {
                       borderClass="border-adobe"
                     />
                   </div>
+
+                  <AcordWcFields
+                    inputClass={INPUT_CLASS}
+                    labelClass={LABEL_CLASS}
+                    mutedTextClass="text-mocha"
+                    borderClass="border-adobe"
+                  />
+
+                  <SignatureFields inputClass={INPUT_CLASS} labelClass={LABEL_CLASS} mutedTextClass="text-mocha" />
+
+                  {problems.length > 0 && (
+                    <div role="alert" className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+                      <p className="font-bold mb-1">Please fix the following before sending:</p>
+                      <ul className="list-disc pl-5">
+                        {problems.map((p) => <li key={p.name}>{p.message}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {sendFailed && (
+                    <div role="alert" className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+                      <p className="font-bold">We could not send your request.</p>
+                      <p>Nothing was submitted. Please try again in a moment, or call us at <a href={SITE.phoneHref} className="font-bold underline">{SITE.phone}</a>.</p>
+                    </div>
+                  )}
 
                   <button type="submit" disabled={loading} className="btn-primary w-full text-base">
                     {loading ? "Submitting..." : <><Send className="h-5 w-5" />Request My Free Quote</>}
