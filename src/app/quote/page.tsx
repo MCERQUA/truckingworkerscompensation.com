@@ -26,8 +26,16 @@ export default function QuotePage() {
   // Success is reported only if at least one of the two actually accepted the submission.
   async function postWebhook(data: FormData): Promise<boolean> {
     try {
-      const res = await fetch(WEBHOOK_URL, { method: "POST", body: data });
-      return res.ok;
+      // urlencoded, not multipart: the leads webhook parses urlencoded/JSON bodies (a multipart body is
+      // answered 200 but dropped as "no contact information"), so a lead could look sent and be lost.
+      const body = new URLSearchParams();
+      data.forEach((value, key) => {
+        if (typeof value === "string") body.append(key, value);
+      });
+      const res = await fetch(WEBHOOK_URL, { method: "POST", body });
+      if (!res.ok) return false;
+      const j = await res.json().catch(() => null);
+      return !!j && j.ok === true && j.stored !== false;
     } catch {
       return false;
     }
