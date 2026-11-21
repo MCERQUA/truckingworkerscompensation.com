@@ -15,12 +15,53 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [sendFailed, setSendFailed] = useState(false);
+
+  function toBody(data: FormData): URLSearchParams {
+    const body = new URLSearchParams();
+    data.forEach((value, key) => {
+      if (typeof value === "string") body.append(key, value);
+    });
+    return body;
+  }
+
+  // Primary path: the leads webhook (urlencoded; multipart is answered 200 but dropped).
+  // Success only if the webhook says ok:true and stored is not false.
+  async function postWebhook(data: FormData): Promise<boolean> {
+    try {
+      const res = await fetch(WEBHOOK_URL, { method: "POST", body: toBody(data) });
+      if (!res.ok) return false;
+      const j = await res.json().catch(() => null);
+      return !!j && j.ok === true && j.stored !== false;
+    } catch {
+      return false;
+    }
+  }
+
+  // Fallback: Netlify Forms (registered in public/__forms.html).
+  async function postNetlifyForms(data: FormData): Promise<boolean> {
+    try {
+      const body = toBody(data);
+      if (!body.has("form-name")) body.set("form-name", "contact");
+      const res = await fetch("/__forms.html", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+    setSendFailed(false);
     const data = new FormData(e.currentTarget);
-    try { await fetch(WEBHOOK_URL, { method: "POST", body: data }); } catch {}
-    setSubmitted(true);
+    const ok = (await postWebhook(data)) || (await postNetlifyForms(data));
+    if (ok) setSubmitted(true);
+    else setSendFailed(true);
     setLoading(false);
   }
 
@@ -88,6 +129,12 @@ export default function ContactPage() {
                       <label className="block text-sm font-heading font-bold text-espresso mb-1.5">Message *</label>
                       <textarea name="message" required rows={4} placeholder="How can we help your trucking operation?" className="w-full rounded-xl border border-adobe px-4 py-3 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/10 transition resize-none" />
                     </div>
+                    {sendFailed && (
+                      <div role="alert" className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+                        <p className="font-bold">We could not send your message.</p>
+                        <p>Nothing was submitted. Please try again in a moment, or call us at <a href={SITE.phoneHref} className="font-bold underline">{SITE.phone}</a>.</p>
+                      </div>
+                    )}
                     <button type="submit" disabled={loading} className="btn-primary w-full">
                       {loading ? "Sending..." : <><Send className="h-4 w-4" />Send Message</>}
                     </button>
